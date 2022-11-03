@@ -21,9 +21,6 @@
                 <label id="labelSelect">
                 </label>
                 <select id="SearchField">
-                    <option>
-                        This is an option
-                    </option>
                 </select>
             </div>
         </nav>
@@ -64,10 +61,15 @@
 
     
     function loadSearch() {
+        var defaultOption  = `
+            <option value = ""> Select one... </option>
+            `
+            searchField.innerHTML = defaultOption;
+
         if(selectedLocation.checked){
-            tableBody.innerHTML = ""
             searchField.innerHTML = ""
-            label.textContent = "Select a location";
+            label.textContent = "Select a location";            
+            searchField.innerHTML = defaultOption;
             locationsArray.forEach(element => {
                 const locationContent = `
                 <option value="${element}">${element}</option>
@@ -75,6 +77,8 @@
                 searchField.innerHTML += locationContent;
                 
             });
+            /*
+            tableBody.innerHTML = ""
             nationalParksArray.forEach(element => { location
 
                 const tableContent = `
@@ -88,19 +92,20 @@
                 </tr>
                 `
                 tableBody.innerHTML += tableContent;
-            });
+            }); */
         }
         
         if(selectedType.checked){
-            tableBody.innerHTML = ""
             searchField.innerHTML = ""
             label.innerHTML = "Select a Type"
+            searchField.innerHTML = defaultOption;
             parkTypesArray.forEach(element => {
                 const parkContent = `
                 <option value="${element}">${element}</option>
                 `
                 searchField.innerHTML += parkContent;
             });
+            /* tableBody.innerHTML = ""
             nationalParksArray.forEach(element => {
                 const tableContent = `
                 <tr>
@@ -113,15 +118,14 @@
                 </tr>
                 `
                 tableBody.innerHTML += tableContent;
-            });
+            });*/
         }
     }
 function loadFilterResults(){
-    options.forEach(location =>{
-        if(location.selected){
-            
+        const selectedValue = searchField.value
+        if(selectedLocation.checked){
                 nationalParksArray.forEach(park =>{
-                    if(location === park.State){
+                    if(selectedValue === park.State){
                         const tableContent = `
                         <tr>
                         <td>${park.LocationName}</td>
@@ -136,12 +140,9 @@ function loadFilterResults(){
                     }
                 })
             }
-            })
-    options.forEach(type =>{
-        if(type.selected){
-                
+        if(selectedType.checked){
                 nationalParksArray.forEach(park =>{
-                    if(type === park.ParkType){
+                    if(park.LocationName.includes(selectedValue)){
                         const tableContent = `
                         <tr>
                         <td>${park.LocationName}</td>
@@ -156,13 +157,12 @@ function loadFilterResults(){
                     }
                 })
             }
-    })
 }
 window.onload = ()=>{
     loadSearch();
     selectedLocation.onclick =loadSearch;
     selectedType.onclick = loadSearch;
-    searchField.onclick = loadFilterResults;
+    searchField.onchange = loadFilterResults;
 }
 
 </script>
